@@ -2,9 +2,9 @@ PyDradis
 =======
 <h3>
 Dradis API Python Wrapper
-<br>
-Copyright &copy; 2016 Novacoast
 </h3>
+
+Originally created by Novacoast.
 
 License
 -
