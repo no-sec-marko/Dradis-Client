@@ -1,7 +1,7 @@
 #####################################################################################
 #                  Pydradis: Python API Wrapper for Dradis                          #
-#                       Copyright (c) 2016 Novacoast                                #
-#                            Dev : Pedro M. Sosa                                    #
+#                       Copyright (c) 2018 GoVanguard                               #
+#              Origionally developed by Pedro M. Sosa, Novacast                     #
 #####################################################################################
 # This file is part of Pydradis.                                                    #
 #                                                                                   #
@@ -18,16 +18,9 @@
 #     You should have received a copy of the GNU Lesser General Public License      #
 #     along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.             #
 #####################################################################################
+__version__ = 0.2.0
 
-#BUGS FOUND ON DRADIS (as of July 2016)
-#1. Nodes Endpoint: IMPORTANT: WHEN CREATING NODES YOU CAN PUT THEM WITH ANY PARENT ID (Negative numbers and non-existant nodes)
-#2. Issues Endpoint: No way to change or set an issue's rating.
-#3. Note Endpoint: Cant update a note with category=0. (Can create it with category = 0 however)
-
-
-#An Example Usage Test for Pydradis.py
-
-from pydradis import Pydradis
+from pydradis3 import Pydradis3
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
