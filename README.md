@@ -1,7 +1,7 @@
 PyDradis
 =======
 <h3>
-Dradis API Python Wrapper 0.1.0
+Dradis API Python Wrapper 0.2.0
 </h3>
 
 Updated by GoVanguard. Originally created by Novacoast.
