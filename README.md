@@ -1,10 +1,10 @@
 PyDradis
 =======
 <h3>
-Dradis API Python Wrapper
+Dradis API Python Wrapper 0.1.0
 </h3>
 
-Originally created by Novacoast.
+Updated by GoVanguard. Originally created by Novacoast.
 
 License
 -
@@ -319,5 +319,3 @@ True #This means it succesfully downloaded file to downloads/screenshot01.png
 >>> pd.delete_attachment(1,358,"important.txt")
 True
 ```
-
-

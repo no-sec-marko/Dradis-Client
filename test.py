@@ -274,9 +274,3 @@ if __name__ == "__main__":
     print("--Deleting Client"),
     if(pd.delete_client(clientid) == True): print("PASS")
     else: print("FAILED")
-
-
-
-
-
-
