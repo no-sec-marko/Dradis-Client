@@ -18,14 +18,14 @@
 #     You should have received a copy of the GNU Lesser General Public License      #
 #     along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.             #
 #####################################################################################
-__version__ = 0.2.0
+__version__ = '0.2.0'
 
 import requests
 import string
 import json
 import shutil
 
-class Pydradis:
+class Pydradis3:
     #End Nodes#
     client_endpoint = "/pro/api/clients"
     project_endpoint = "/pro/api/projects"
@@ -442,15 +442,13 @@ class Pydradis:
 
         #Finding packet by traversing tree structure.
         nodepath = nodepath.split("/")
-        #print nodepath
         parent_id = None
         for node in nodepath:
             for i in range(0, len(r)):
                 found = False
-                #print "checking", r[i]["label"], "-- Wanting", node
                 if ((r[i]["label"] == node) and (r[i]["parent_id"] == parent_id)):
                     if (self.__debug):
-                         print "Found:", node, r[i]["id"]
+                         print("Found:", node, r[i]["id"])
                     parent_id = r[i]["id"]
                     found = True
                     break
@@ -459,7 +457,7 @@ class Pydradis:
                 return None
 
         if (self.__debug):
-            print "Your node is:", parent_id
+            print("Your node is:", parent_id)
 
         return parent_id
 
