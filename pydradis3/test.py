@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     print("Testing PyDradis!")
     
-    pd = Pydradis3("gnTM4gPnTF6pbkQgYXPi9mH2","https://dradispro.govanguard.co",False,False)
+    pd = Pydradis3("gnTM4gPnTF6pbkQgYXPi9mH2", "https://dradispro.govanguard.co", True, False)
 
 
     #Client
@@ -49,19 +49,15 @@ if __name__ == "__main__":
         print("PASS")
     else:
         print("FAILED")
+
+    print("--Find Client"),
+    clientId = pd.find_client("Test V.1")
     
     print("--Update Client"),
     if (pd.update_client(clientid,"Test V.1 - MOD")==clientid):
         print("PASS")
     else:
         print("FAILED")
-    
-    print("--Find Client"),
-    if (pd.find_client("Test V.1 - MOD") == clientid):
-        print("PASS")
-    else:
-        print("FAILED")
-
 
     print("--Get Client"),
     if (str(pd.get_client(clientid)["id"]) == str(clientid)):
