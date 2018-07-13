@@ -49,19 +49,23 @@ class Pydradis3:
     #Send Requests to Dradis (& DebuggCheck for Error Codes)
     def contactDradis(self, url: str, header: dict, reqType: str, response_code: str, data=""):
         r = 0
-        r = requests.Request(reqType, url, headers=header, data=data, verify=self.__verify)
+        r = requests.Request(reqType, url, headers=header, data=data)
+        r = r.prepare()
 
+        s = requests.Session()
+        results = s.send(r)
+
+        print(results)
         if (self.__debug):
             print("\nServer Response:\n")
-            print(r.status_code)
+            print(results.status_code)
             print("---\n")
-            print(r.content)
+            print(results.content)
 
-
-        if (str(r.status_code) != str(response_code)):
+        if (str(results.status_code) != str(response_code)):
             return None
 
-        return r.json()
+        return results.json()
 
     ####################################
     #         Clients Endpoint         #
@@ -175,7 +179,7 @@ class Pydradis3:
     def get_client(self, client_id: str):
 
         #URL
-        url = self.__urlgself.client_endpoint + "/"  +  str(client_id)
+        url = self.__url + self.client_endpoint + "/"  +  str(client_id)
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
@@ -599,9 +603,9 @@ class Pydradis3:
 
         result = []
         for i in range(0, len(r)):
-            str1 = string.upper(r[i]["text"])
+            str1 = str(r[i]["text"]).upper()
             for k in keywords:
-                str2 = string.upper(k)
+                str2 = str(k).upper()
                 if (str1.find(str2) != -1):
                     result  += [[r[i]["title"], r[i]["id"]]]
                     break

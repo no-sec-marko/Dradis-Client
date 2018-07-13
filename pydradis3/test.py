@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     print("Testing PyDradis!")
     
-    pd = Pydradis3("<DRADIS API KEY>","<DRADIS SERVER URL>",False,False)
+    pd = Pydradis3("gnTM4gPnTF6pbkQgYXPi9mH2","https://dradispro.govanguard.co",False,False)
 
 
     #Client
