@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pydradis3",
-    version="0.2.0",
+    version="0.2.1",
     author="Shane Scott",
     author_email="sscott@gvit.com",
     description="Update of pydradis for Python3 plus some optimizations",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/GoVanguard/dradis-python-wrapper",
+    url="https://github.com/GoVanguard/pydradis3",
     packages=setuptools.find_packages(),
     classifiers=(
         "Programming Language :: Python :: 3",

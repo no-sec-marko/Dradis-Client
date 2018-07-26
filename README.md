@@ -1,19 +1,19 @@
 PyDradis
 =======
 <h3>
-Dradis API Python Wrapper 0.2.0
+Dradis API Python Wrapper 0.2.1
 </h3>
 
 Updated by GoVanguard. Originally created by Novacoast.
 
 License
 -
-Pydradis is free software: you can redistribute it and/or modify
+Pydradis3 is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Pydradis is distributed in the hope that it will be useful,
+Pydradis3 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
@@ -32,11 +32,11 @@ pip install pydradis
 Setup:
 
 ```python
-from pydradis import Pydradis
+from pydradis3 import Pydradis3
 
 debug = True #Do you want to see debug info?
 verify = True #Force ssl certificate verification?
-pd = Pydradis("<DRADIS API KEY>","<DRADIS SERVER URL>",debug,verify)
+pd = Pydradis3("<DRADIS API KEY>","<DRADIS SERVER URL>",debug,verify)
 
 ```
 
