@@ -39,20 +39,20 @@ if __name__ == "__main__":
 
     print("--Get Clients"),
     if (pd.get_clientlist() != None):
-        print("PASS")
+       print("PASS")
     else:
-        print("FAILED")
-    
+       print("FAILED")
+     
     print("--Create Client"),
     clientid = pd.create_client("Test V.1")
     if (clientid != None):
         print("PASS")
     else:
         print("FAILED")
-
+ 
     print("--Find Client"),
     clientId = pd.find_client("Test V.1")
-    
+     
     print("--Update Client"),
     if (pd.update_client(clientid,"Test V.1 - MOD")==clientid):
         print("PASS")

@@ -522,10 +522,31 @@ class Pydradis3:
         #DATA
         taglines = ""
         if (len(tags) != 0):
-            for t in tags:
-                taglines += "#[' + tg']#\r\n"
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
 
         data = { 'issue':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines}}
+
+        #CONTACT DRADIS
+        r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
+
+        #RETURN
+        if (r == None):
+            return None
+
+        return r['id']
+
+    #Create Issue on Project
+    def create_issue_raw(self, pid: int, data: str):
+
+        #URL
+        url = self.__url + self.issue_endpoint
+
+        #HEADER
+        header = {'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
+
+        #DATA
+        data = {'issue': data}
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
@@ -548,8 +569,8 @@ class Pydradis3:
         #DATA
         taglines = ""
         if (len(tags) != 0):
-            for t in tags:
-                taglines += "#[' + tg']#\r\n"    
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"    
 
         data = { 'issue':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines}}
 
@@ -562,6 +583,43 @@ class Pydradis3:
             return None
 
         return r['id']
+
+    #Update Issue
+    def update_issue_tags(self, pid: int, issue_id: tags=[]):
+
+        #URL
+        url = self.__url + self.issue_endpoint + "/" + str(issue_id)
+
+        #HEADER
+        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
+
+        # Obtain original
+        existingIssue = self.get_issue(pid=pid, issue_id=issue_id)
+        if existingIssue:
+            title = existingIssue['title']
+            text = existingIssue['text']
+        else:
+            return None
+
+        # Remove original
+        deleteExisting = self.delete_issue(pid=pid, issue_id=issue_id)
+
+        #DATA
+        taglines = ""
+        if (len(tags) != 0):
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
+
+        data = { 'issue':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines}}
+
+        # Create new
+        createIssue = create_issue(pid=pid, title=title, text=text, tags=taglines)
+
+        #RETURN
+        if (createIssue == None):
+            return None
+
+        return str(createIssue)
 
     #Delete Issue 
     def delete_issue(self, pid: int, issue_id: str):
@@ -664,8 +722,8 @@ class Pydradis3:
         #DATA
         taglines = ""
         if (len(tags) != 0):
-            for t in tags:
-                taglines += "#[' + tg']#\r\n"
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
 
         #DATA
         data = { 'evidence':{'content':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines, "issue_id":str(issue_id)}}
@@ -673,6 +731,27 @@ class Pydradis3:
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
         
+        #RETURN
+        if (r == None):
+            return None
+
+        return r['id']
+
+    #Create Evidence
+    def create_evidence_raw(self, pid: int, node_id: str, issue_id: str, data: str):
+
+        #URL
+        url = self.__url + self.evidence_endpoint.replace("<ID>", str(node_id))
+
+        #HEADER
+        header = {'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
+
+        #DATA
+        data = {'evidence':{'content':data, "issue_id":str(issue_id)}}
+
+        #CONTACT DRADIS
+        r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
+
         #RETURN
         if (r == None):
             return None
@@ -691,8 +770,8 @@ class Pydradis3:
         #DATA
         taglines = ""
         if (len(tags) != 0):
-            for t in tags:
-                taglines += "#[' + tg']#\r\n"
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
 
         data = { 'evidence':{'content':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines, "issue_id":str(issue_id)}}
         
@@ -812,14 +891,35 @@ class Pydradis3:
         #DATA
         taglines = ""
         if (len(tags) != 0):
-            for t in tags:
-                taglines += "#[' + tg']#\r\n"
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
 
         data = { 'note':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines, "category_id":str(category)}}
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
         
+        #RETURN
+        if (r == None):
+            return None
+
+        return r['id']
+
+    #Create a note on a project
+    def create_note_raw(self, pid: int, node_id: str, data: str)
+
+        #URL
+        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id))
+
+        #HEADER
+        header = {'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
+
+        #DATA
+        data = {'note':{'text':data}}
+
+        #CONTACT DRADIS
+        r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
+
         #RETURN
         if (r == None):
             return None
@@ -838,14 +938,40 @@ class Pydradis3:
         #DATA
         taglines = ""
         if (len(tags) != 0):
-            for t in tags:
-                taglines += "#[' + tg']#\r\n"
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
 
         data = { 'note':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines, "category_id":str(category)}}
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
         
+        #RETURN
+        if (r == None):
+            return None
+
+        return r['id']
+
+    #Update Note
+    def update_note_raw(self, pid: int, node_id: str, data):
+
+        #URL
+        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id)) + "/" + str(note_id)
+
+        #HEADER
+        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
+
+        #DATA
+        taglines = ""
+        if (len(tags) != 0):
+            for tag in tags:
+                taglines += "#[" + tag + "]#\r\n"
+
+        data = { 'note':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines, "category_id":str(category)}}
+
+        #CONTACT DRADIS
+        r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
+
         #RETURN
         if (r == None):
             return None
