@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pydradis3",
-    version="0.2.1",
+    version="0.2.2",
     author="Shane Scott",
     author_email="sscott@gvit.com",
     description="Update of pydradis for Python3 plus some optimizations",

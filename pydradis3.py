@@ -18,8 +18,6 @@
 #     You should have received a copy of the GNU Lesser General Public License      #
 #     along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.             #
 #####################################################################################
-__version__ = '0.2.1'
-
 import requests
 import string
 import json
