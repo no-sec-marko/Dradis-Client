@@ -585,7 +585,7 @@ class Pydradis3:
         return r['id']
 
     #Update Issue
-    def update_issue_tags(self, pid: int, issue_id: tags=[]):
+    def update_issue_tags(self, pid: int, issue_id: str, tags=[]):
 
         #URL
         url = self.__url + self.issue_endpoint + "/" + str(issue_id)
@@ -824,9 +824,9 @@ class Pydradis3:
 
         result = []
         for i in range(0, len(r)):
-            str1 = string.upper(r[i]["content"])
+            str1 = str(r[i]["content"]).upper()
             for k in keywords:
-                str2 = string.upper(k)
+                str2 = str(k).upper()
                 if (str1.find(str2) != -1):
                     result  += [r[i]]
                     break
@@ -906,7 +906,7 @@ class Pydradis3:
         return r['id']
 
     #Create a note on a project
-    def create_note_raw(self, pid: int, node_id: str, data: str)
+    def create_note_raw(self, pid: int, node_id: str, data: str):
 
         #URL
         url = self.__url + self.note_endpoint.replace("<ID>", str(node_id))
@@ -1018,9 +1018,9 @@ class Pydradis3:
 
         result = []
         for i in range(0, len(r)):
-            str1 = string.upper(r[i]["text"])
+            str1 = str(r[i]["text"]).upper()
             for k in keywords:
-                str2 = string.upper(k)
+                str2 = str(k).upper()
                 if (str1.find(str2) != -1):
                     result  += [[r[i]["title"], r[i]["id"]]]
                     break

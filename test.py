@@ -51,7 +51,7 @@ if __name__ == "__main__":
         print("FAILED")
  
     print("--Find Client"),
-    clientId = pd.find_client("Test V.1")
+    clientid = pd.find_client("Test V.1")
      
     print("--Update Client"),
     if (pd.update_client(clientid,"Test V.1 - MOD")==clientid):
@@ -81,6 +81,7 @@ if __name__ == "__main__":
         print("PASS")
     else:
         print("FAILED")
+        projectid = pd.find_project("Project T - Mod")
 
     print("--Update Project"),
     if (pd.update_project(projectid,"Project T - Mod",clientid) == projectid):
