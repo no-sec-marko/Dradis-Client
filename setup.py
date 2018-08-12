@@ -14,8 +14,10 @@ setuptools.setup(
     url="https://github.com/GoVanguard/pydradis3",
     packages=['pydradis3'],
     classifiers=(
-        "Programming Language :: Python :: 3",
-        "License :: GPLv2 License",
-        "Operating System :: OS Independent",
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Programming Language :: Python :: 3.6',
+        'Operating System :: OS Independent',
     ),
 )

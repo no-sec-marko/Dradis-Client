@@ -96,6 +96,7 @@ if __name__ == "__main__":
     print("--Get Project"),
     if (str(pd.get_project(projectid)["id"]) == str(projectid)):
         print("PASS")
+        print(str(projectid))
     else:
         print("FAILED")
 
