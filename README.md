@@ -6,38 +6,28 @@ Dradis API Python Wrapper 0.2.2
 
 Updated by GoVanguard. Originally created by Novacoast.
 
-License
--
-Pydradis3 is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+## About PyDradis3
+This is a wrapper for the [Dradis Pro API](http://securityroots.com/dradispro/support/guides/rest_api/index.html) written in Python 3.
 
-Pydradis3 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.
-
-Usage Example
--
-This is a wrapper for the [Dradis Pro API](http://securityroots.com/dradispro/support/guides/rest_api/index.html)
-
-Install by either pulling from this repo or using:
+## Installation
+Install by either pulling from this repo:
 ```
-pip install pydradis
+git clone https://github.com/GoVanguard/pydradis3.git
 ```
+
+Or by using:
+```
+pip install pydradis3
+```
+
+## Usage
 Setup:
-
-```python
+```python3.6
 from pydradis3 import Pydradis3
 
 debug = True #Do you want to see debug info?
 verify = True #Force ssl certificate verification?
 pd = Pydradis3("<DRADIS API KEY>","<DRADIS SERVER URL>",debug,verify)
-
 ```
 
 All endpoints have 6 functions that work roughly the same:
@@ -319,3 +309,17 @@ True #This means it succesfully downloaded file to downloads/screenshot01.png
 >>> pd.delete_attachment(1,358,"important.txt")
 True
 ```
+
+## License
+Pydradis3 is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Pydradis3 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.
