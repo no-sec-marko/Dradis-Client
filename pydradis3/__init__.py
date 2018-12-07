@@ -583,6 +583,27 @@ class Pydradis3:
         return r['id']
 
     #Update Issue
+    def update_issue_raw(self, pid: int, issue_id: str, data: str):
+
+        #URL
+        url = self.__url + self.issue_endpoint + "/" + str(issue_id)
+
+        #HEADER
+        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
+
+        #DATA
+        data = {'issue': data}
+
+        #CONTACT DRADIS
+        r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
+
+        #RETURN
+        if (r == None):
+            return None
+
+        return r['id']
+
+    #Update Issue
     def update_issue_tags(self, pid: int, issue_id: str, tags=[]):
 
         #URL
