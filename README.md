@@ -1,8 +1,9 @@
-PyDradis
-=======
-<h3>
-Dradis API Python Wrapper 0.2.3
-</h3>
+PyDradis (https://govanguard.io)
+==
+[![Build Status](https://travis-ci.com/GoVanguard/pydradis3.svg?branch=master)](https://travis-ci.com/GoVanguard/pydradis3)
+[![Known Vulnerabilities](https://snyk.io/test/github/GoVanguard/pydradis3/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/GoVanguard/pydradis3?targetFile=requirements.txt)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7a4946d2cdcd64f10bbc/maintainability)](https://codeclimate.com/github/GoVanguard/pydradis3/maintainability)
+
 
 Updated by GoVanguard. Originally created by Novacoast.
 
