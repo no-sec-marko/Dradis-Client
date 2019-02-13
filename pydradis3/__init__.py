@@ -37,6 +37,8 @@ class Pydradis3:
     def __init__(self, apiToken: str, url: str, debug=False, verify=True):
         self.__apiToken = apiToken  #API Token 
         self.__url = url            #Dradis URL (eg. https://your_dradis_server.com)
+        self.__header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
+        self.__headerCt = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
         self.__debug = debug        #Debuging True?
         self.__verify = verify      #Path to SSL certificate
 
@@ -74,11 +76,8 @@ class Pydradis3:
         #URL
         url = self.__url + self.client_endpoint
 
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
-
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "GET", "200")
+        r = self.contactDradis(url, self.__headerCt, "GET", "200")
 
         #RETURN
         if (r == None):
@@ -96,14 +95,11 @@ class Pydradis3:
         #URL
         url = self.__url + self.client_endpoint
         
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
-        
         #DATA
         data = {"client":{"name":client_name}}
 
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
+        r = self.contactDradis(url, self.__headerCt, "POST", "201", json.dumps(data))
         
         #RETURN
         if (r == None):
@@ -116,15 +112,12 @@ class Pydradis3:
         
         #URL
         url = self.__url + self.client_endpoint + "/" + str(client_id)
-
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
         
         #DATA
         data = {"client":{"name":new_client_name}}
         
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
+        r = self.contactDradis(url, self.__headerCt, "PUT", "200", json.dumps(data))
         
         #RETURN
         if (r == None):
@@ -137,12 +130,9 @@ class Pydradis3:
 
         #URL
         url = self.__url + self.client_endpoint + "/" + str(client_id)
-
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
         
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "DELETE", "200")
+        r = self.contactDradis(url, self.__header, "DELETE", "200")
 
         #RETURN
         if (r == None):
@@ -156,11 +146,8 @@ class Pydradis3:
         #URL
         url = self.__url + self.client_endpoint
 
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
-
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "GET", "200")
+        r = self.contactDradis(url, self.__headerCt, "GET", "200")
 
         #RETURN
         if (r == None):
@@ -179,11 +166,8 @@ class Pydradis3:
         #URL
         url = self.__url + self.client_endpoint + "/"  +  str(client_id)
 
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
-
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "GET", "200")
+        r = self.contactDradis(url, self.__headerCt, "GET", "200")
 
         #RETURN
         if (r == None):
@@ -202,11 +186,8 @@ class Pydradis3:
         #URL
         url = self.__url + self.project_endpoint
 
-        #DATA
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
-
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "GET", "200")
+        r = self.contactDradis(url, self.__header, "GET", "200")
 
         #RETURN
         if (r == None):
@@ -224,16 +205,13 @@ class Pydradis3:
         #URL
         url = self.__url + self.project_endpoint
 
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
-        
         #DATA
         data = {"project":{"name":project_name}}
         if (client_id != None):
             data = {"project":{"name":project_name, "client_id":str(client_id)}}
         
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
+        r = self.contactDradis(url, self.__headerCt, "POST", "201", json.dumps(data))
         
         #RETURN
         if (r == None):
@@ -246,18 +224,15 @@ class Pydradis3:
         
         #URL
         url = self.__url + self.project_endpoint + "/" + str(pid)
-
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
         
         #DATA
         data = {"project":{"name":new_project_name}}
         if (new_client_id != None):
             data = {"project":{"name":new_project_name, "client_id":str(new_client_id)}}
-        
+
 
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
+        r = self.contactDradis(url, self.__headerCt, "PUT", "200", json.dumps(data))
         
         #RETURN
         if (r == None):
@@ -270,12 +245,9 @@ class Pydradis3:
         
         #URL
         url = self.__url + self.project_endpoint + "/" + str(pid)
-
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
         
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "DELETE", "200")
+        r = self.contactDradis(url, self.__header, "DELETE", "200")
 
         #RETURN
         if (r == None):
@@ -289,11 +261,8 @@ class Pydradis3:
         #URL
         url = self.__url + self.project_endpoint
 
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
-
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "GET", "200")
+        r = self.contactDradis(url, self.__header, "GET", "200")
 
         #RETURN
         if (r == None):
@@ -312,11 +281,8 @@ class Pydradis3:
         #URL
         url = self.__url + self.project_endpoint + "/" + str(pid)
 
-        #HEADER
-        header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
-
         #CONTACT DRADIS
-        r = self.contactDradis(url, header, "GET", "200")
+        r = self.contactDradis(url, self.__header, "GET", "200")
 
         #RETURN
         if (r == None):
