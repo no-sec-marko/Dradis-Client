@@ -1,4 +1,4 @@
-PyDradis (https://govanguard.io)
+PyDradis (https://govanguard.com)
 ==
 [![Build Status](https://travis-ci.com/GoVanguard/pydradis3.svg?branch=master)](https://travis-ci.com/GoVanguard/pydradis3)
 [![Known Vulnerabilities](https://snyk.io/test/github/GoVanguard/pydradis3/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/GoVanguard/pydradis3?targetFile=requirements.txt)
