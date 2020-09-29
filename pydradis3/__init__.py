@@ -53,7 +53,7 @@ class Pydradis3:
         r = r.prepare()
 
         s = requests.Session()
-        results = s.send(r)
+        results = s.send(r, verify=self.__verify)
 
         print(results)
         if (self.__debug):
