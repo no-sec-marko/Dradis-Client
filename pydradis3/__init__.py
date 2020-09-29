@@ -30,12 +30,12 @@ class Pydradis3:
     node_endpoint = "/pro/api/nodes"
     issue_endpoint = "/pro/api/issues"
     evidence_endpoint = "/pro/api/nodes/<ID>/evidence"
-    note_endpoint = "/pro/api/nodes/<ID>/notes" 
+    note_endpoint = "/pro/api/nodes/<ID>/notes"
     attachment_endpoint = "/pro/api/nodes/<ID>/attachments"
 
     #Constructor
     def __init__(self, apiToken: str, url: str, debug=False, verify=True):
-        self.__apiToken = apiToken  #API Token 
+        self.__apiToken = apiToken  #API Token
         self.__url = url            #Dradis URL (eg. https://your_dradis_server.com)
         self.__header = { 'Authorization':'Token token="' + self.__apiToken + '"'}
         self.__headerCt = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json'}
@@ -53,7 +53,7 @@ class Pydradis3:
         r = r.prepare()
 
         s = requests.Session()
-        results = s.send(r)
+        results = s.send(r, verify=self.__verify)
 
         print(results)
         if (self.__debug):
@@ -71,7 +71,7 @@ class Pydradis3:
     #         Clients Endpoint         #
     ####################################
 
-    #Get Client List 
+    #Get Client List
     def get_clientlist(self):
         #URL
         url = self.__url + self.client_endpoint
@@ -89,48 +89,48 @@ class Pydradis3:
 
         return result
 
-    #Create Client 
+    #Create Client
     def create_client(self, client_name: str):
-        
+
         #URL
         url = self.__url + self.client_endpoint
-        
+
         #DATA
         data = {"client":{"name":client_name}}
 
         #CONTACT DRADIS
         r = self.contactDradis(url, self.__headerCt, "POST", "201", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
 
-        return r['id'] 
+        return r['id']
 
-    #Update Client 
+    #Update Client
     def update_client(self, client_id: str, new_client_name: str):
-        
+
         #URL
         url = self.__url + self.client_endpoint + "/" + str(client_id)
-        
+
         #DATA
         data = {"client":{"name":new_client_name}}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, self.__headerCt, "PUT", "200", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
 
-        return r['id']      
+        return r['id']
 
-    #Delete Client 
+    #Delete Client
     def delete_client(self, client_id: str):
 
         #URL
         url = self.__url + self.client_endpoint + "/" + str(client_id)
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, self.__header, "DELETE", "200")
 
@@ -140,7 +140,7 @@ class Pydradis3:
 
         return True
 
-    #Search For Client 
+    #Search For Client
     def find_client(self, name: str):
 
         #URL
@@ -157,10 +157,10 @@ class Pydradis3:
         for i in range(0, len(r)):
             if (r[i]["name"] == name):
                 return r[i]["id"]
-        
+
         return None
 
-    #Get Client Info 
+    #Get Client Info
     def get_client(self, client_id: str):
 
         #URL
@@ -172,7 +172,7 @@ class Pydradis3:
         #RETURN
         if (r == None):
             return None
-        
+
         return r
 
 
@@ -180,7 +180,7 @@ class Pydradis3:
     #         Projects Endpoint        #
     ####################################
 
-    #Get Project List 
+    #Get Project List
     def get_projectlist(self):
 
         #URL
@@ -199,9 +199,9 @@ class Pydradis3:
 
         return result
 
-    #Create Project 
+    #Create Project
     def create_project(self, project_name: str, client_id=None):
-        
+
         #URL
         url = self.__url + self.project_endpoint
 
@@ -209,22 +209,22 @@ class Pydradis3:
         data = {"project":{"name":project_name}}
         if (client_id != None):
             data = {"project":{"name":project_name, "client_id":str(client_id)}}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, self.__headerCt, "POST", "201", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
 
-        return r['id'] 
+        return r['id']
 
-    #Update Project 
+    #Update Project
     def update_project(self, pid: int, new_project_name: str, new_client_id=None):
-        
+
         #URL
         url = self.__url + self.project_endpoint + "/" + str(pid)
-        
+
         #DATA
         data = {"project":{"name":new_project_name}}
         if (new_client_id != None):
@@ -233,19 +233,19 @@ class Pydradis3:
 
         #CONTACT DRADIS
         r = self.contactDradis(url, self.__headerCt, "PUT", "200", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
 
-        return r['id']     
+        return r['id']
 
-    #Delete Project 
+    #Delete Project
     def delete_project(self, pid: int):
-        
+
         #URL
         url = self.__url + self.project_endpoint + "/" + str(pid)
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, self.__header, "DELETE", "200")
 
@@ -255,9 +255,9 @@ class Pydradis3:
 
         return True
 
-    #Search For Project 
+    #Search For Project
     def find_project(self, name: str):
-        
+
         #URL
         url = self.__url + self.project_endpoint
 
@@ -272,10 +272,10 @@ class Pydradis3:
         for i in range(0, len(r)):
             if (r[i]["name"] == name):
                 return r[i]["id"]
-        
+
         return None
 
-    #Get Project Info 
+    #Get Project Info
     def get_project(self, pid: int):
 
         #URL
@@ -287,7 +287,7 @@ class Pydradis3:
         #RETURN
         if (r == None):
             return None
-        
+
         return r
 
 
@@ -295,9 +295,9 @@ class Pydradis3:
     #         Nodes Endpoint           #
     ####################################
 
-    #Get Node List 
+    #Get Node List
     def get_nodelist(self, pid: int):
-        
+
         #URL
         url = self.__url + self.node_endpoint
 
@@ -317,7 +317,7 @@ class Pydradis3:
 
         return result
 
-    #Create Node 
+    #Create Node
     def create_node(self, pid: int, label: str, type_id=0, parent_id=None, position=1):
 
         #URL
@@ -325,24 +325,24 @@ class Pydradis3:
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
-        
+
         #DATA
         if (parent_id != None): #If None (Meaning its a toplevel node) then dont convert None to string.
             parent_id = str(parent_id)
         data = {"node":{"label":label, "type_id":str(type_id), "parent_id":parent_id, "position": str(position)}}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
 
-        return r['id'] 
+        return r['id']
 
-    #Update Node 
+    #Update Node
     def update_node(self, pid: int, node_id: str, label=None, type_id=None, parent_id=None, position=None):
-        
+
         #URL
         url = self.__url + self.node_endpoint + "/" + str(node_id)
 
@@ -351,7 +351,7 @@ class Pydradis3:
 
         #DATA (notice this time we are building a str not a dict)
         if (label==type_id==parent_id==position==None):
-            return None        
+            return None
 
         data = '{"node":{'
         if (label != None):
@@ -367,14 +367,14 @@ class Pydradis3:
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "PUT", "200", data)
-        
+
         #RETURN
         if (r == None):
             return None
 
-        return r['id']  
+        return r['id']
 
-    #Delete Node 
+    #Delete Node
     def delete_node(self, pid: int, node_id: str):
 
         #URL
@@ -382,7 +382,7 @@ class Pydradis3:
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "DELETE", "200")
 
@@ -392,7 +392,7 @@ class Pydradis3:
 
         return True
 
-    #Find Node  :: Given a nodepath (e.g ac/dc/r) return the node id. (these change between projects) 
+    #Find Node  :: Given a nodepath (e.g ac/dc/r) return the node id. (these change between projects)
     def find_node(self, pid: int, nodepath: str):
 
         #URL
@@ -429,12 +429,12 @@ class Pydradis3:
 
         return parent_id
 
-    #Get Node Info 
+    #Get Node Info
     def get_node(self, pid: int, node_id: str):
 
         #URL
         url = self.__url + self.node_endpoint + "/" + str(node_id)
-        
+
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
 
@@ -444,7 +444,7 @@ class Pydradis3:
         #RETURN
         if (r == None):
             return None
-        
+
         return r
 
 
@@ -452,9 +452,9 @@ class Pydradis3:
     #         Issues Endpoint          #
     ####################################
 
-    #Get Issue List 
+    #Get Issue List
     def get_issuelist(self, pid: int):
-        
+
         #URL
         url = self.__url + self.issue_endpoint
 
@@ -474,7 +474,7 @@ class Pydradis3:
 
         return result
 
-    #Create Issue on Project 
+    #Create Issue on Project
     def create_issue(self, pid: int, title: str, text: str, tags=[]):
 
         #URL
@@ -521,9 +521,9 @@ class Pydradis3:
 
         return r['id']
 
-    #Update Issue 
+    #Update Issue
     def update_issue(self, pid: int, issue_id: str, title: str, text: str, tags=[]):
-        
+
         #URL
         url = self.__url + self.issue_endpoint + "/" + str(issue_id)
 
@@ -534,7 +534,7 @@ class Pydradis3:
         taglines = ""
         if (len(tags) != 0):
             for tag in tags:
-                taglines += "#[" + tag + "]#\r\n"    
+                taglines += "#[" + tag + "]#\r\n"
 
         data = { 'issue':{'text':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines}}
 
@@ -606,15 +606,15 @@ class Pydradis3:
 
         return str(createIssue)
 
-    #Delete Issue 
+    #Delete Issue
     def delete_issue(self, pid: int, issue_id: str):
-        
+
         #URL
         url = self.__url + self.issue_endpoint + "/" + str(issue_id)
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid), 'Content-type': 'application/json'}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "DELETE", "200")
 
@@ -624,9 +624,9 @@ class Pydradis3:
 
         return True
 
-    #Find Issue 
+    #Find Issue
     def find_issue(self, pid: int, keywords: str):
-        
+
         #URL
         url = self.__url + self.issue_endpoint
 
@@ -655,7 +655,7 @@ class Pydradis3:
 
         return result
 
-    #Get Issue (with issue_id) 
+    #Get Issue (with issue_id)
     def get_issue(self, pid: int, issue_id: str):
 
         #URL
@@ -677,7 +677,7 @@ class Pydradis3:
     #         Evidence Endpoint        #
     ####################################
 
-    #Get Evidence List 
+    #Get Evidence List
     def get_evidencelist(self, pid: int, node_id: str):
 
         #URL
@@ -695,7 +695,7 @@ class Pydradis3:
 
         return r
 
-    #Create Evidence 
+    #Create Evidence
     def create_evidence(self, pid: int, node_id: str, issue_id: str, title: str, text: str, tags=[]):
 
         #URL
@@ -715,7 +715,7 @@ class Pydradis3:
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
@@ -743,7 +743,7 @@ class Pydradis3:
 
         return r['id']
 
-    #Update Evidence 
+    #Update Evidence
     def update_evidence(self, pid: int, node_id: str, issue_id: str, evidence_id: str, title: str, text: str, tags=[]):
 
         #URL
@@ -759,17 +759,17 @@ class Pydradis3:
                 taglines += "#[" + tag + "]#\r\n"
 
         data = { 'evidence':{'content':'#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines, "issue_id":str(issue_id)}}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
 
         return r['id']
 
-    #Delete Evidence 
+    #Delete Evidence
     def delete_evidence(self, pid: int, node_id: str, evidence_id: str):
 
         #URL
@@ -787,7 +787,7 @@ class Pydradis3:
 
         return True
 
-    #Find Evidence 
+    #Find Evidence
     def find_evidence(self, pid: int, node_id: str, keywords: str):
 
         #URL
@@ -818,7 +818,7 @@ class Pydradis3:
 
         return result
 
-    #Get Evidence Info 
+    #Get Evidence Info
     def get_evidence(self, pid: int, node_id: str, evidence_id: str):
 
         #URL
@@ -826,7 +826,7 @@ class Pydradis3:
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "GET", "200")
 
@@ -842,7 +842,7 @@ class Pydradis3:
     ####################################
 
 
-    #Get Note List 
+    #Get Note List
     def get_notelist(self, pid: int, node_id: str):
 
         #URL
@@ -864,9 +864,9 @@ class Pydradis3:
 
         return result
 
-    #Create a note on a project 
+    #Create a note on a project
     def create_note(self, pid: int, node_id: str, title: str, text: str, tags=[], category=0):
-        
+
         #URL
         url = self.__url + self.note_endpoint.replace("<ID>", str(node_id))
 
@@ -883,7 +883,7 @@ class Pydradis3:
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "POST", "201", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
@@ -911,7 +911,7 @@ class Pydradis3:
 
         return r['id']
 
-    #Update Note 
+    #Update Note
     def update_note(self, pid: int, node_id: str, note_id: str, title: str, text: str, tags=[], category=1):
 
         #URL
@@ -930,7 +930,7 @@ class Pydradis3:
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
@@ -963,7 +963,7 @@ class Pydradis3:
 
         return r['id']
 
-    #Delete Note 
+    #Delete Note
     def delete_note(self, pid: int, node_id: str, note_id: str):
 
         #URL
@@ -981,9 +981,9 @@ class Pydradis3:
 
         return True
 
-    #Find Note 
+    #Find Note
     def find_note(self, pid: int, node_id: str, keywords: str):
-        
+
         #URL
         url = self.__url + self.note_endpoint.replace("<ID>", str(node_id))
 
@@ -1013,7 +1013,7 @@ class Pydradis3:
 
         return result
 
-    #Get Note Info 
+    #Get Note Info
     def get_note(self, pid: int, node_id: str, note_id: str):
 
         #URL
@@ -1021,7 +1021,7 @@ class Pydradis3:
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
-        
+
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "GET", "200")
 
@@ -1095,7 +1095,7 @@ class Pydradis3:
 
             #FILES
             files = [('files[]', open(attachment_filename, 'rb'))]
-            
+
             r = requests.post(url, headers=header, files=files, verify=self.__verify)
             if(r.status_code != 201):
                 return None
@@ -1114,13 +1114,13 @@ class Pydradis3:
 
         #HEADER
         header = { 'Authorization':'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json', 'Dradis-Project-Id': str(pid)}
-        
+
         #DATA
         data = {"attachment":{"filename":new_attachment_name}}
 
         #CONTACT DRADIS
         r = self.contactDradis(url, header, "PUT", "200", json.dumps(data))
-        
+
         #RETURN
         if (r == None):
             return None
