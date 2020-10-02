@@ -1,2 +1,4 @@
 requests==2.20.1
 setuptools==39.0.1
+
+urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
