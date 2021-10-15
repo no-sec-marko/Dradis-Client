@@ -1,6 +1,7 @@
 #####################################################################################
-#                  Pydradis: Python API Wrapper for Dradis                          #
-#                       Copyright (c) 2018 GoVanguard                               #
+#                  PyDradis3-ng: Python API Wrapper for Dradis                      #
+#                          Maintained by no-sec-marko                               #
+#                       Updated by  GoVanguard (2018)                               #
 #              Origionally developed by Pedro M. Sosa, Novacast                     #
 #####################################################################################
 # This file is part of Pydradis.                                                    #
@@ -18,7 +19,7 @@
 #     You should have received a copy of the GNU Lesser General Public License      #
 #     along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.             #
 #####################################################################################
-from pydradis3 import Pydradis3
+from pydradis3ng import PyDradis3ng
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -29,7 +30,7 @@ if __name__ == "__main__":
 
     print("Testing PyDradis!")
     
-    pd = Pydradis3("gnTM4gPnTF6pbkQgYXPi9mH2", "https://dradispro.govanguard.co", True, False)
+    pd = PyDradis3ng("your-token", "https://dradis.pro", True, False)
 
 
     #Client
@@ -68,7 +69,7 @@ if __name__ == "__main__":
     print("\n<PROJECT ENDPOINT>");
 
     print("--Get Projects"),
-    if (pd.get_projectlist() != None):
+    if (pd.get_project_list() != None):
         print("PASS")
     else:
         print("FAILED")
