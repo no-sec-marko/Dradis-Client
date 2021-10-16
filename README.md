@@ -24,7 +24,7 @@ python3 -m pip install ./dist/pydradis3-ng-0.3.0.tar.gz
 
 ## Usage
 
-Initial setup of PyDradis3:
+Initial setup of `PyDradis3ng`:
 
 ```python
 from pydradis3ng import PyDradis3ng
@@ -50,48 +50,22 @@ All endpoints have 6 functions that work roughly the same:
 
 - *Find:* Given keyword(s), return a list of possible elements.
 
-### Client Endpoint
-
-- get_clientlist()
+### Teams Endpoint
 
 ```python
-pd.get_clientlist()
-[[u'NASA', 2], [u'ACME Inc.', 5]]
-```
-
-- get_client(int client_id)
-
-```python
-pd.get_client(2)
-{u'client_since': u'2016-08-29', u'name': u'NASA', u'created_at': u'2016-08-29T05:43:47.000Z', u'updated_at': u'2016-08-29T05:44:30.000Z', u'id': 3, u'projects': [{u'id': 6, u'name': u'Internal Pentest #1'}]}
-```
-
-- create_client(string client_name)
-
-```python
-pd.create_client("Wayne Industries")
-42
-```
-
-- update_client(string client_name)
-
-```python
-pd.update_client("Wayne Corp.")
-42
-```
-
-- find_client(string client_name)
-
-```python
-pd.find_client("Wayne Corp.")
-42
-```
-
-- delete_client(int client_id)
-
-```python
-pd.delete_client(42)
-True
+team_id = 1
+# Retrieves all teams as list, reduced by name and team id.
+teams = pd.get_teams_list()
+# Retrieves a single team.
+team_by_id = pd.get_team(team_id=team_id)
+# Creates a team based on the name.
+new_team_id = pd.create_team(team_name='New PyDradis Team')
+# Updates a team. Pass the name of the team.
+updated_team_id = pd.update_team(team_id=new_team_id, team_name='Updated PyDradis Team')
+# Search for Team by team name.
+team_pydradis= pd.find_team_by_name(team_name='Updated PyDradis Team')
+# Deletes a team.
+is_team_deleted = pd.delete_team(team_id=updated_team_id)
 ```
 
 ### Project Endpoint
