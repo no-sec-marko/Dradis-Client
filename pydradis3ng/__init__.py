@@ -31,6 +31,7 @@ class PyDradis3ng:
     login_endpoint = "/pro/login"
     sessions_endpoint = "/pro/session"
     team_endpoint = "/pro/api/teams"
+    user_endpoint = "/pro/api/users"
     project_endpoint = "/pro/api/projects"
     node_endpoint = "/pro/api/nodes"
     issue_endpoint = "/pro/api/issues"
@@ -111,11 +112,11 @@ class PyDradis3ng:
         else:
             return None
 
+
     ####################################
     #         Teams Endpoint           #
     ####################################
 
-    # Get Team List
     def get_teams_list(self) -> list:
         """
         Retrieves all teams as list, reduced by name and team id.
@@ -213,6 +214,41 @@ class PyDradis3ng:
         else:
             self.__logger.warning(f'No team with team name {team_name} found.')
             return {}
+
+    ####################################
+    #         Users Endpoint           #
+    ####################################
+
+    def get_users_list(self) -> list:
+        """
+        Retrieves all users.
+        """
+        url = self.__url + self.user_endpoint
+        r = self.contact_dradis(url, self.__headerCt, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No users found.')
+            return []
+
+        result = []
+        for i in r:
+            result.append([[i["name"], i["id"]]])
+
+        return result
+
+    def get_user(self, user_id: int) -> dict:
+        """
+        Retrieves a single user.
+        """
+
+        url = f'{self.__url}{self.user_endpoint}/{user_id}'
+        r = self.contact_dradis(url, self.__headerCt, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No team with team id {user_id} found.')
+            return {}
+
+        return r
 
     ####################################
     #         Projects Endpoint        #
