@@ -1,2 +1,4 @@
-requests==2.20.1
-setuptools==39.0.1
+requests
+requests-HTML
+setuptools
+wheel
