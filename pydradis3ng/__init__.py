@@ -91,8 +91,6 @@ class PyDradis3ng:
         The function calls the web login method using username and password and
         fetches the cookie from the response.
         """
-
-        # URL
         login_url = self.__url + self.login_endpoint
         sessions_url = self.__url + self.sessions_endpoint
 
@@ -120,7 +118,6 @@ class PyDradis3ng:
         """
         Retrieves all teams as list, reduced by name and team id.
         """
-
         url = self.__url + self.team_endpoint
         r = self.contact_dradis(url, self.__headerCt, "GET", "200")
 
@@ -138,7 +135,6 @@ class PyDradis3ng:
         """
         Retrieves a single team.
         """
-
         url = f'{self.__url}{self.team_endpoint}/{team_id}'
         r = self.contact_dradis(url, self.__headerCt, "GET", "200")
 
@@ -153,7 +149,6 @@ class PyDradis3ng:
         # Creates a team based on the name.
         Returns the new created team id.
         """
-
         url = self.__url + self.team_endpoint
         data = {"team": {"name": team_name}}
 
@@ -170,7 +165,6 @@ class PyDradis3ng:
         Updates a team. Pass the name of the team.
         Return the new created team id.
         """
-
         url = f'{self.__url}{self.team_endpoint}/{team_id}'
         data = {"team": {"name": team_name}}
 
@@ -186,7 +180,6 @@ class PyDradis3ng:
         """
         Deletes a team.
         """
-
         url = f'{self.__url}{self.team_endpoint}/{team_id}'
         r = self.contact_dradis(url, self.__header, "DELETE", "200")
 
@@ -239,7 +232,6 @@ class PyDradis3ng:
         """
         Retrieves a single user.
         """
-
         url = f'{self.__url}{self.user_endpoint}/{user_id}'
         r = self.contact_dradis(url, self.__headerCt, "GET", "200")
 
@@ -257,7 +249,6 @@ class PyDradis3ng:
         """
         Retrieves all projects, reduced by name and project id.
         """
-
         url = self.__url + self.project_endpoint
         r = self.contact_dradis(url, self.__header, "GET", "200")
 
@@ -275,7 +266,6 @@ class PyDradis3ng:
         """
         Retrieves a single project.
         """
-
         url = f'{self.__url}{self.project_endpoint}/{pid}'
         r = self.contact_dradis(url, self.__header, "GET", "200")
 
@@ -295,7 +285,6 @@ class PyDradis3ng:
         @author_ids: Assigns users as authors to the project. If not specified, only the user performing the request will be added as author.
         @template: Associate with a project template to pre-populate the project with data. Pass this the project template name.
         """
-
         url = self.__url + self.project_endpoint
         data = {"project": {"name": project_name}}
 
@@ -324,7 +313,6 @@ class PyDradis3ng:
         """
         Updates a project.
         """
-
         url = f'{self.__url}{self.project_endpoint}/{pid}'
         data = {"project": {"name": project_name}}
 
@@ -353,7 +341,6 @@ class PyDradis3ng:
         """
         Deletes a project.
         """
-
         url = f'{self.__url}{self.project_endpoint}/{pid}'
         r = self.contact_dradis(url, self.__header, "DELETE", "200")
 
@@ -366,7 +353,6 @@ class PyDradis3ng:
         """
         Search for a Project by project name
         """
-
         url = self.__url + self.project_endpoint
         r = self.contact_dradis(url, self.__header, "GET", "200")
 
@@ -390,7 +376,6 @@ class PyDradis3ng:
         """
         Retrieves all the Nodes in your specific project, reduced by label and node id.
         """
-
         url = self.__url + self.node_endpoint
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
 
@@ -430,7 +415,6 @@ class PyDradis3ng:
         @parent_id: Pass parent_id the ID of your desired parent Node to create a subnode. Or, use "parent_id": null, to create a top-level Node.
         @position: Pass position a numeric value to insert the new Node at a specific location within the existing Node structure
         """
-
         url = self.__url + self.node_endpoint
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
@@ -451,7 +435,6 @@ class PyDradis3ng:
         """
         Updates a Node in your specified project. You can update some or all of the Node attributes
         """
-
         url = f'{self.__url}{self.node_endpoint}/{node_id}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
@@ -515,7 +498,9 @@ class PyDradis3ng:
         return result
 
     def get_issue(self, pid: int, issue_id: int) -> dict:
-
+        """
+        Retrieves a single Issue from your specified project.
+        """
         url = f'{self.__url}{self.issue_endpoint}/{issue_id}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
@@ -572,7 +557,6 @@ class PyDradis3ng:
         """
         Deletes an Issue from your specified project.
         """
-
         url = f'{self.__url}{self.issue_endpoint}/{issue_id}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
@@ -591,7 +575,6 @@ class PyDradis3ng:
         """
         Retrieves all the Evidence associated with the specific Node in your project,
         """
-
         url = self.__url + self.evidence_endpoint.format(id=node_id)
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
@@ -654,7 +637,6 @@ class PyDradis3ng:
         """
         Updates a specific piece of Evidence on a Node in your project.
         """
-
         url = f'{self.__url}{self.evidence_endpoint.format(id=node_id)}/{evidence_id}'
         return self._evidence_request(url=url, method='PUT', return_code=200, pid=pid, issue_id=issue_id,
                                       evidence_properties=evidence_properties, tags=tags)
@@ -663,7 +645,6 @@ class PyDradis3ng:
         """
         Deletes a piece of Evidence from the specified Node in your project.
         """
-
         url = f'{self.__url}{self.evidence_endpoint.format(id=node_id)}/{evidence_id}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
@@ -681,7 +662,6 @@ class PyDradis3ng:
         '''
         Retrieves all of the Content Blocks in your project, ordered by the Content Block id, ascending.
         '''
-
         url = self.__url + self.content_blocks_endpoint
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
@@ -700,7 +680,6 @@ class PyDradis3ng:
         '''
         Retrieves a single Content Block from your project.
         '''
-
         url = f'{self.__url}{self.content_blocks_endpoint}/{block_id}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
@@ -759,8 +738,96 @@ class PyDradis3ng:
         """
         Deletes a specific Content Block from your project.
         """
-
         url = f'{self.__url}{self.content_blocks_endpoint}/{block_id}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+                  'Content-type': 'application/json'}
+        r = self.contact_dradis(url, header, "DELETE", "200")
+
+        if r is None:
+            return False
+
+        return True
+
+    ####################################
+    #         Notes Endpoint           #
+    ####################################
+
+    def get_note_list(self, pid: int, node_id: int) -> list:
+        """
+        Retrieves all of the Notes associated with the specific Node in your project.
+        """
+        url = f'{self.__url}{self.note_endpoint.format(id=node_id)}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        r = self.contact_dradis(url, header, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No notes found.')
+            return []
+
+        result = []
+        for i in r:
+            result.append([[i["title"], i["id"]]])
+
+        return result
+
+    def get_note(self, pid: int, node_id: int, note_id: int) -> dict:
+        """
+        Retrieves a single Note from the specific Node in your project.
+        """
+        url = f'{self.__url}{self.note_endpoint.format(id=node_id)}/{note_id}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        r = self.contact_dradis(url, header, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No notes with note id {note_id} on node id {node_id} found.')
+            return {}
+
+        return r
+
+    def _note_request(self, url: str, method: str, return_code: int, pid: int,
+                      note_properties: dict, category_id=0) -> int:
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+                  'Content-type': 'application/json'}
+
+        note_content = ''
+
+        for key, value in note_properties.items():
+            note_content += f'#[{key}]#\r\n{value}\r\n\r\n'
+
+        data = {'note': {'text': note_content, 'category_id': str(category_id)}}
+
+        r = self.contact_dradis(url, header, method, str(return_code), json.dumps(data))
+
+        if r is None:
+            return -1
+
+        return r['id']
+
+    def create_note(self, pid: int, node_id: int, note_properties: dict, category=0) -> int:
+        """
+        Creates a Note on the specified Node in your project.
+
+        @text: Pass it the content of the Note.
+        @category_id (optional):  	Pass this the numeric value of the category you want to assign to your Note.
+        For example, pass it a value of 1 to set your Note to the AdvancedWordExport ready category.
+        """
+        url = self.__url + self.note_endpoint.format(id=node_id)
+        return self._note_request(url=url, method="POST", return_code=201, pid=pid, note_properties=note_properties,
+                                  category_id=category)
+
+    def update_note(self, pid: int, node_id: int, note_id: int, note_properties: dict, category=0) -> int:
+        """
+        Updates a Note on the specified Node in your project.
+        """
+        url = f'{self.__url}{self.note_endpoint.format(id=node_id)}/{note_id}'
+        return self._note_request(url=url, method="PUT", return_code=200, pid=pid, note_properties=note_properties,
+                                  category_id=category)
+
+    def delete_note(self, pid: int, node_id: int, note_id: int) -> bool:
+        """
+        Deletes a Note from the specified Node in your project.
+        """
+        url = f'{self.__url}{self.note_endpoint.format(id=node_id)}/{note_id}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
@@ -790,97 +857,6 @@ class PyDradis3ng:
             result.update(r[i].items())
 
         return result
-
-    ####################################
-    #         Notes Endpoint           #
-    ####################################
-
-    # Get Note List
-    def get_notelist(self, pid: int, node_id: str):
-
-        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id))
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
-        r = self.contact_dradis(url, header, "GET", "200")
-
-        if r is None:
-            return None
-
-        result = []
-        for i in range(0, len(r)):
-            result += [[r[i]["title"], r[i]["id"]]]
-
-        return result
-
-    # Get Note Info
-    def get_note(self, pid: int, node_id: str, note_id: str):
-
-        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id)) + "/" + str(note_id)
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
-        r = self.contact_dradis(url, header, "GET", "200")
-
-        if r is None:
-            return None
-
-        return r
-
-    # Create a note on a project
-    def create_note(self, pid: int, node_id: str, title: str, text: str, tags=[], category=0):
-
-        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id))
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
-                  'Content-type': 'application/json'}
-
-        taglines = ""
-        if (len(tags) != 0):
-            for tag in tags:
-                taglines += "#[" + tag + "]#\r\n"
-
-        data = {'note': {
-            'text': '#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines,
-            "category_id": str(category)}}
-
-        r = self.contact_dradis(url, header, "POST", "201", json.dumps(data))
-
-        if r is None:
-            return None
-
-        return r['id']
-
-    # Update Note
-    def update_note(self, pid: int, node_id: str, note_id: str, title: str, text: str, tags=[], category=1):
-
-        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id)) + "/" + str(note_id)
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
-                  'Content-type': 'application/json'}
-
-        taglines = ""
-        if (len(tags) != 0):
-            for tag in tags:
-                taglines += "#[" + tag + "]#\r\n"
-
-        data = {'note': {
-            'text': '#[Title]#\r\n' + title + '\r\n\r\n#[Description]#\r\n' + str(text) + "\r\n\r\n" + taglines,
-            "category_id": str(category)}}
-
-        r = self.contact_dradis(url, header, "PUT", "200", json.dumps(data))
-
-        if r is None:
-            return None
-
-        return r['id']
-
-    # Delete Note
-    def delete_note(self, pid: int, node_id: str, note_id: str):
-
-        url = self.__url + self.note_endpoint.replace("<ID>", str(node_id)) + "/" + str(note_id)
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
-                  'Content-type': 'application/json'}
-        r = self.contact_dradis(url, header, "DELETE", "200")
-
-        if r is None:
-            return None
-
-        return True
 
     ####################################
     #       Attachments Endpoint       #
