@@ -40,7 +40,7 @@ server_url = '<DRADIS SERVER URL>'
 client = DradisClient(api_token, server_url, debug, verify)
 ```
 
-All endpoints have 6 functions that work roughly the same:
+All endpoints have 5 functions that work roughly the same:
 
 - *Get:* Given an element id, returns the element info.
 
@@ -51,8 +51,6 @@ All endpoints have 6 functions that work roughly the same:
 - *Update:* Updates elements and returns their id.
 
 - *Delete:* Deletes elements and returns True if successful.
-
-- *Find:* Given keyword(s), return a list of possible elements.
 
 ### Teams Endpoint
 
@@ -123,10 +121,8 @@ is_node_deleted = client.delete_node(pid=pid, node_id=updated_node)
 pid = 36
 # Retrieves all the Issues in your specific project.
 all_issues = client.get_issue_list(pid=pid)
-assert all_issues is not None
 # Retrieves a single Issue from your specified project.
 issue = client.get_issue(pid=pid, issue_id=all_issues[0][0][1])
-assert issue is not None
 
 new_issue_text = {"Title": "Dangerous HTTP methods: TRACE",
                   "Rating": "Medium",
@@ -136,14 +132,12 @@ new_issue_text = {"Title": "Dangerous HTTP methods: TRACE",
 tags = ['en', 'mobile']
 # Creates an Issue in the specified project.
 new_issue_id = client.create_issue(pid=pid, title="New Issue", issue_properties=new_issue_text, tags=tags)
-assert new_issue_id > 0
 updated_issue_text = {"Title": "Updated Issue Title",
                   "Rating": "Medium",
                   "Description": "Updated sample Issue description."}
 # Updates an Issue in the specified project.
 updated_issue_id = client.update_issue(pid=pid, issue_id=new_issue_id, title="Updated Issue Title",
                                        issue_properties=updated_issue_text, tags=tags)
-assert updated_issue_id > 0
 # Deletes an Issue from your specified project.
 is_issue_deleted = client.delete_issue(pid=pid, issue_id=updated_issue_id)
 ```
@@ -159,18 +153,14 @@ new_evidence_props = {"Description": "bc. Placeholder evidence content."}
 updated_evidence_props = {"Description": "bc. Updated evidence content."}
 # Retrieves all the Evidence associated with the specific Node in your project
 evidences = client.get_evidence_list(pid=pid, node_id=node_id)
-assert evidences is not None
 # Retrieves a single piece of Evidence from a Node in your project.
 evidence = client.get_evidence(pid=pid, node_id=node_id, evidence_id=8017)
-assert evidence is not None
 # Creates a piece of Evidence on the specified Node in your project.
 new_evidence_id = client.create_evidence(pid=pid, node_id=node_id, issue_id=issue_id,
                                          evidence_properties=new_evidence_props)
-assert new_evidence_id > 0
 # Updates a specific piece of Evidence on a Node in your project.
 updated_evidence_id = client.update_evidence(pid=pid, node_id=node_id, issue_id=issue_id, evidence_id=new_evidence_id,
                                              evidence_properties=updated_evidence_props)
-assert updated_evidence_id > 0
 # Deletes a piece of Evidence from the specified Node in your project.
 is_evidence_deleted = client.delete_evidence(pid=pid, node_id=node_id, evidence_id=new_evidence_id)
 ```
@@ -184,19 +174,15 @@ cb_id = 333
 cb_content = {'Title': 'New Content Block', 'Description': 'Sample content.'}
 # Retrieves all of the Content Blocks in your project.
 content_blocks = client.get_content_blocks(pid=pid)
-assert content_blocks is not None
 # Retrieves a single Content Block from your project.
 content_block = client.get_content_block(pid=pid, block_id=cb_id)
-assert content_block is not None
 # Creates a Content Block in your project.
 new_content_block_id = client.create_content_block(pid=pid, block_properties=cb_content, block_group='Conclusions')
-assert new_content_block_id > 0
 cb_content['Title'] = 'Updated Content Block'
 updated_cb_content = cb_content
 # Updates a specific Content Block in your project.
 updated_content_block_id = client.update_content_block(pid=pid, block_id=new_content_block_id,
                                                        block_properties=updated_cb_content)
-assert updated_content_block_id > 0
 # Deletes a specific Content Block from your project.
 is_content_block_deleted = client.delete_content_block(pid=pid, block_id=updated_content_block_id)
 ```
@@ -212,19 +198,15 @@ new_note = {'Title': 'Host Details', 'Type': 'Details', 'Description': 'Lorem ip
                                                                        'sagittis libero eu hendrerit aliquam.'}
 # Retrieves all of the Notes associated with the specific Node in your project.
 notes = client.get_note_list(pid=pid, node_id=node_id)
-assert notes is not None
 # Retrieves a single Note from the specific Node in your project.
 note = client.get_note(pid=pid, node_id=node_id, note_id=notes[0][0][1])
-assert note is not None
 # Creates a Note on the specified Node in your project.
 new_note_id = client.create_note(pid=pid, node_id=node_id, note_properties=new_note, category=0)
-assert new_note_id > 0
 new_note['Title'] = 'Updated Host Details'
 updated_note = new_note
 # Updates a Note on the specified Node in your project.
 updated_note_id = client.update_note(pid=pid, node_id=node_id, note_id=new_note_id, note_properties=updated_note,
                                      category=1)
-assert updated_note_id > 0
 # Deletes a Note from the specified Node in your project.
 is_note_deleted = client.delete_note(pid=pid, node_id=node_id, note_id=updated_note_id)
 ```
@@ -314,4 +296,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with PyDradis3-ng.  If not, see <http://www.gnu.org/licenses/>.
+along with Dradis-Client. If not, see <http://www.gnu.org/licenses/>.
