@@ -840,23 +840,86 @@ class PyDradis3ng:
     ####################################
     #    Document Properties Endpoint  #
     ####################################
-    def get_document_properties(self, pid: int):
-        '''
-        Retrieves all of the Document Properties associated with the specific project.
-        '''
 
+    def get_document_properties(self, pid: int) -> list:
+        """
+        Retrieves all of the Document Properties associated with the specific project.
+        """
         url = self.__url + self.document_properties_endpoint
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
-            return None
+            self.__logger.warning(f'No document properties found.')
+            return []
 
-        result = {}
-        for i in range(0, len(r)):
-            result.update(r[i].items())
+        return r
 
-        return result
+    def get_document_property(self, pid: int, property_key: str) -> dict:
+        """
+        Retrieves a single Document Property from the specific Node in your project.
+        """
+        url = f'{self.__url}{self.document_properties_endpoint}/{property_key}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        r = self.contact_dradis(url, header, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No property with document property id {property_key} found.')
+            return {}
+
+        return r
+
+    def create_document_properties(self, pid: int, document_properties: dict) -> bool:
+        """
+        Creates a Document Property in your project.
+        """
+        url = self.__url + self.document_properties_endpoint
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+                  'Content-type': 'application/json'}
+
+        data = {'document_properties': document_properties}
+
+        r = self.contact_dradis(url, header, 'POST', '201', json.dumps(data))
+
+        if r is None:
+            self.__logger.warning(f'It was not possible to create document properties. See response for further '
+                                  f'details: {r}')
+            return False
+
+        return True
+
+    def update_document_property(self, pid: int, property_key: str, property_value: str) -> int:
+        """
+        Updates a Note on the specified Node in your project.
+        """
+        url = f'{self.__url}{self.document_properties_endpoint}/{property_key}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+                  'Content-type': 'application/json'}
+
+        data = {'document_property': {'value': property_value}}
+
+        r = self.contact_dradis(url, header, 'PUT', '200', json.dumps(data))
+
+        if r is None:
+            self.__logger.warning(f'It was not possible to update document properties. See response for further '
+                                  f'details: {r}')
+            return False
+
+        return True
+
+    def delete_document_property(self, pid: int, property_key: str) -> bool:
+        """
+        Deletes a Document Property in your project.
+        """
+        url = f'{self.__url}{self.document_properties_endpoint}/{property_key}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+                  'Content-type': 'application/json'}
+        r = self.contact_dradis(url, header, "DELETE", "200")
+
+        if r is None:
+            return False
+
+        return True
 
     ####################################
     #       Attachments Endpoint       #
