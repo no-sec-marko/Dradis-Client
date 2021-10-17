@@ -1,8 +1,8 @@
 #####################################################################################
-#                  PyDradis3-ng: Python API Wrapper for Dradis                      #
-#                          Maintained by no-sec-marko (2021)                        #
+#                  Dradis-Client: Python API Wrapper for Dradis                     #
+#                   Reworked and Maintained by no-sec-marko (2021)                  #
 #                       Updated by  GoVanguard (2018)                               #
-#              Originally developed by Pedro M. Sosa, Novacast                     #
+#              Originally developed by Pedro M. Sosa, Novacast                      #
 #####################################################################################
 # This file is part of Pydradis.                                                    #
 #                                                                                   #
@@ -26,8 +26,7 @@ import shutil
 import logging
 
 
-class PyDradis3ng:
-    # Endpoints #
+class DradisClient:
     login_endpoint = '/pro/login'
     sessions_endpoint = '/pro/session'
     team_endpoint = '/pro/api/teams'
@@ -40,6 +39,7 @@ class PyDradis3ng:
     attachment_endpoint = '/pro/api/nodes/{id}/attachments'
     content_blocks_endpoint = '/pro/api/content_blocks'
     document_properties_endpoint = '/pro/api/document_properties'
+    issue_library_endpoint = '/pro/api/addons/issuelib/entries'
 
     def __init__(self, api_token: str, url: str, debug=False, verify=True):
         self.__apiToken = api_token  # API Token
@@ -308,7 +308,7 @@ class PyDradis3ng:
 
         return r['id']
 
-    def update_project(self, pid: str, project_name: str, team_id=None, report_template_properties_id=None,
+    def update_project(self, pid: int, project_name: str, team_id=None, report_template_properties_id=None,
                        author_ids=None, template=None) -> int:
         """
         Updates a project.
@@ -377,7 +377,7 @@ class PyDradis3ng:
         Retrieves all the Nodes in your specific project, reduced by label and node id.
         """
         url = self.__url + self.node_endpoint
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
 
         r = self.contact_dradis(url, header, "GET", "200")
 
@@ -396,7 +396,7 @@ class PyDradis3ng:
         Retrieves a single Node from your specified project and displays all the Evidence and Notes associated with the Node.
         """
         url = f'{self.__url}{self.node_endpoint}/{node_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "GET", "200")
 
@@ -416,7 +416,7 @@ class PyDradis3ng:
         @position: Pass position a numeric value to insert the new Node at a specific location within the existing Node structure
         """
         url = self.__url + self.node_endpoint
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         if parent_id != None:  # If None (Meaning its a toplevel node) then dont convert None to string.
@@ -436,7 +436,7 @@ class PyDradis3ng:
         Updates a Node in your specified project. You can update some or all of the Node attributes
         """
         url = f'{self.__url}{self.node_endpoint}/{node_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         if label == type_id == parent_id == position is None:
@@ -465,7 +465,7 @@ class PyDradis3ng:
         Deletes a Node from your specified project.
         """
         url = f'{self.__url}{self.node_endpoint}/{node_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
 
@@ -483,7 +483,7 @@ class PyDradis3ng:
         Retrieves all the Issues in your specific project, reduced by issue name and issue id.
         """
         url = self.__url + self.issue_endpoint
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
 
         r = self.contact_dradis(url, header, "GET", "200")
 
@@ -502,7 +502,7 @@ class PyDradis3ng:
         Retrieves a single Issue from your specified project.
         """
         url = f'{self.__url}{self.issue_endpoint}/{issue_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -513,7 +513,7 @@ class PyDradis3ng:
 
     def _issue_request(self, url: str, method: str, return_code: int, pid: int, title: str, issue_properties: dict,
                        tags=None) -> int:
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         issue_text = f'#[Title]#\r\n{title}\r\n\r\n'
@@ -558,7 +558,7 @@ class PyDradis3ng:
         Deletes an Issue from your specified project.
         """
         url = f'{self.__url}{self.issue_endpoint}/{issue_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
 
@@ -576,7 +576,7 @@ class PyDradis3ng:
         Retrieves all the Evidence associated with the specific Node in your project,
         """
         url = self.__url + self.evidence_endpoint.format(id=node_id)
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -590,7 +590,7 @@ class PyDradis3ng:
         Retrieves a single piece of Evidence from a Node in your project.
         """
         url = f'{self.__url}{self.evidence_endpoint.format(id=node_id)}/{evidence_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
 
         r = self.contact_dradis(url, header, "GET", "200")
 
@@ -602,7 +602,7 @@ class PyDradis3ng:
 
     def _evidence_request(self, url: str, method: str, return_code: int, pid: int, issue_id: int,
                           evidence_properties: dict, tags=None) -> int:
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         evidence_content = ''
@@ -646,7 +646,7 @@ class PyDradis3ng:
         Deletes a piece of Evidence from the specified Node in your project.
         """
         url = f'{self.__url}{self.evidence_endpoint.format(id=node_id)}/{evidence_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
 
@@ -663,7 +663,7 @@ class PyDradis3ng:
         Retrieves all of the Content Blocks in your project, ordered by the Content Block id, ascending.
         '''
         url = self.__url + self.content_blocks_endpoint
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -681,7 +681,7 @@ class PyDradis3ng:
         Retrieves a single Content Block from your project.
         '''
         url = f'{self.__url}{self.content_blocks_endpoint}/{block_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -692,7 +692,7 @@ class PyDradis3ng:
 
     def _content_block_request(self, url: str, method: str, return_code: int, pid: int,
                                block_properties: dict, block_group=None) -> int:
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         block_content = ''
@@ -739,7 +739,7 @@ class PyDradis3ng:
         Deletes a specific Content Block from your project.
         """
         url = f'{self.__url}{self.content_blocks_endpoint}/{block_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
 
@@ -757,7 +757,7 @@ class PyDradis3ng:
         Retrieves all of the Notes associated with the specific Node in your project.
         """
         url = f'{self.__url}{self.note_endpoint.format(id=node_id)}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -775,7 +775,7 @@ class PyDradis3ng:
         Retrieves a single Note from the specific Node in your project.
         """
         url = f'{self.__url}{self.note_endpoint.format(id=node_id)}/{note_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -786,7 +786,7 @@ class PyDradis3ng:
 
     def _note_request(self, url: str, method: str, return_code: int, pid: int,
                       note_properties: dict, category_id=0) -> int:
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         note_content = ''
@@ -828,7 +828,7 @@ class PyDradis3ng:
         Deletes a Note from the specified Node in your project.
         """
         url = f'{self.__url}{self.note_endpoint.format(id=node_id)}/{note_id}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
 
@@ -846,7 +846,7 @@ class PyDradis3ng:
         Retrieves all of the Document Properties associated with the specific project.
         """
         url = self.__url + self.document_properties_endpoint
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -860,7 +860,7 @@ class PyDradis3ng:
         Retrieves a single Document Property from the specific Node in your project.
         """
         url = f'{self.__url}{self.document_properties_endpoint}/{property_key}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -874,7 +874,7 @@ class PyDradis3ng:
         Creates a Document Property in your project.
         """
         url = self.__url + self.document_properties_endpoint
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         data = {'document_properties': document_properties}
@@ -893,7 +893,7 @@ class PyDradis3ng:
         Updates a Note on the specified Node in your project.
         """
         url = f'{self.__url}{self.document_properties_endpoint}/{property_key}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         data = {'document_property': {'value': property_value}}
@@ -912,7 +912,7 @@ class PyDradis3ng:
         Deletes a Document Property in your project.
         """
         url = f'{self.__url}{self.document_properties_endpoint}/{property_key}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
         r = self.contact_dradis(url, header, "DELETE", "200")
 
@@ -930,7 +930,7 @@ class PyDradis3ng:
         Retrieves all the Attachments associated with the specific Node in your project.
         """
         url = self.__url + self.attachment_endpoint.format(id=node_id)
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -944,7 +944,7 @@ class PyDradis3ng:
         Retrieves a single attachment from a Node in your project.
         """
         url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_name}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
@@ -960,7 +960,7 @@ class PyDradis3ng:
         be fetched from the function self.get_dradis_cookie().
         '''
         url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_name}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         cookies = {'_dradis_session': cookie}
@@ -986,7 +986,7 @@ class PyDradis3ng:
         Creates an Attachment on the specified Node in your project.
         """
         url = self.__url + self.attachment_endpoint.format(id=node_id)
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid)}
 
         try:
             files = [('files[]', open(attachment_filename, 'rb'))]
@@ -1009,15 +1009,16 @@ class PyDradis3ng:
         Renames a specific Attachment on a Node in your project.
         """
         url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_filename}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json',
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Content-type': 'application/json',
                   'Dradis-Project-Id': str(pid)}
 
         data = {"attachment": {"filename": new_attachment_filename}}
         r = self.contact_dradis(url, header, "PUT", "200", json.dumps(data))
 
         if r is None:
-            self.__logger.warning(f'It was not possible to rename the attachment {attachment_filename}. See the response '
-                                  f'for further details:\n{r}')
+            self.__logger.warning(
+                f'It was not possible to rename the attachment {attachment_filename}. See the response '
+                f'for further details:\n{r}')
             return {}
 
         return r
@@ -1027,10 +1028,83 @@ class PyDradis3ng:
         Deletes an Attachment from the specified Node in your project.
         """
         url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_name}'
-        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
+        header = {'Authorization': f'Token token="{self.__apiToken}"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         r = self.contact_dradis(url, header, "DELETE", "200")
+
+        if r is None:
+            return False
+
+        return True
+
+    ####################################
+    #       IssueLibrary Endpoint      #
+    ####################################
+
+    def get_issue_library_list(self) -> list:
+        url = self.__url + self.issue_library_endpoint
+        r = self.contact_dradis(url, self.__header, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No issues in IssueLibrary were found.')
+            return []
+
+        return r
+
+    def get_issue_library_entry(self, issuelib_id: int) -> dict:
+        """
+        Retrieves a single IssueLibrary entry.
+        """
+        url = f'{self.__url}{self.issue_library_endpoint}/{issuelib_id}'
+        r = self.contact_dradis(url, self.__header, "GET", "200")
+
+        if r is None:
+            self.__logger.warning(f'No library issue with issuelib id {issuelib_id} found.')
+            return {}
+
+        return r
+
+    def _issue_library_request(self, url: str, method: str, return_code: int, issue_library_properties: dict) -> int:
+
+        issue_library_content = ''
+
+        for key, value in issue_library_properties.items():
+            issue_library_content += f'#[{key}]#\r\n{value}\r\n\r\n'
+
+        data = {'entry': {'content': issue_library_content}}
+
+        r = self.contact_dradis(url, self.__headerCt, method, str(return_code), json.dumps(data))
+
+        if r is None:
+            return -1
+
+        return r['id']
+
+    def create_issue_library_entry(self, issue_library_properties: dict) -> int:
+        """
+        Creates an IssueLibrary entry.
+
+        @content: Pass it the content of the IssueLibrary entry to be created.
+        """
+        url = self.__url + self.issue_library_endpoint
+        return self._issue_library_request(url=url, method="POST", return_code=201,
+                                           issue_library_properties=issue_library_properties)
+
+    def update_issue_library_entry(self, issue_library_properties: dict, issuelib_id: int) -> int:
+        """
+        Updates a specific IssueLibrary entry.
+        """
+        url = f'{self.__url}{self.issue_library_endpoint}/{issuelib_id}'
+        return self._issue_library_request(url=url, method="PUT", return_code=200,
+                                           issue_library_properties=issue_library_properties)
+
+    def delete_issue_library_entry(self, issuelib_id: int) -> bool:
+        """
+        Deletes a specific IssueLibrary entry from your instance.
+        """
+        url = f'{self.__url}{self.issue_library_endpoint}/{issuelib_id}'
+        r = self.contact_dradis(url, self.__header, "DELETE", "200")
 
         if r is None:
             return False

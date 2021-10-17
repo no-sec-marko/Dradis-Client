@@ -19,7 +19,7 @@
 #     You should have received a copy of the GNU Lesser General Public License      #
 #     along with Pydradis.  If not, see <http://www.gnu.org/licenses/>.             #
 #####################################################################################
-from pydradis3ng import PyDradis3ng
+from dradis import PyDradis3ng
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
