@@ -925,30 +925,41 @@ class PyDradis3ng:
     #       Attachments Endpoint       #
     ####################################
 
-    # Get Attachments
-    def get_attachment_list(self, pid: int, node_id: str):
-
-        url = self.__url + self.attachment_endpoint.replace("<ID>", str(node_id))
+    def get_attachment_list(self, pid: int, node_id: int) -> list:
+        """
+        Retrieves all the Attachments associated with the specific Node in your project.
+        """
+        url = self.__url + self.attachment_endpoint.format(id=node_id)
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
         if r is None:
-            return None
+            self.__logger.warning(f'No attachments found.')
+            return []
 
-        result = []
-        for i in range(0, len(r)):
-            result += [[r[i]["filename"], r[i]["link"]]]
+        return r
 
-        return result
+    def get_attachment(self, pid: int, node_id: int, attachment_name: str) -> dict:
+        """
+        Retrieves a single attachment from a Node in your project.
+        """
+        url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_name}'
+        header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
+        r = self.contact_dradis(url, header, "GET", "200")
 
-    # Get (Download) Attachment
-    def download_attachment(self, pid: int, node_id: str, attachment_name: str, cookie: str, output_file=None):
+        if r is None:
+            self.__logger.warning(f'No attachments found.')
+            return {}
+
+        return r
+
+    def download_attachment(self, pid: int, node_id: int, attachment_name: str, cookie: str, output_file=None) -> bool:
         '''
-        Donwload a single attachment from a Node in your project. Fetching the file / attachment from the
+        Download a single attachment from a Node in your project. Fetching the file / attachment from the
         the API is not possible. Therefore, a valid '_dradis_session' cookie is necessary. The value can
         be fetched from the function self.get_dradis_cookie().
         '''
-        url = self.__url + self.attachment_endpoint.replace("<ID>", str(node_id)) + "/" + attachment_name
+        url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_name}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
         r = self.contact_dradis(url, header, "GET", "200")
 
@@ -965,54 +976,63 @@ class PyDradis3ng:
                 shutil.copyfileobj(response.raw, out_file)
             del response
         except Exception as err:
-            print("Unexpected exception: {0}".format(err))
-            return None
+            self.__logger.warning("Unexpected exception: {0}".format(err))
+            return False
 
         return True
 
-    # Post Attachment
-    def post_attachment(self, pid: int, node_id: str, attachment_filename: str):
-
-        url = self.__url + self.attachment_endpoint.replace("<ID>", str(node_id))
+    def create_attachment(self, pid: int, node_id: int, attachment_filename: str) -> list:
+        """
+        Creates an Attachment on the specified Node in your project.
+        """
+        url = self.__url + self.attachment_endpoint.format(id=node_id)
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid)}
 
         try:
             files = [('files[]', open(attachment_filename, 'rb'))]
 
             r = requests.post(url, headers=header, files=files, verify=self.__verify)
-            if (r.status_code != 201):
-                return None
+            if r.status_code != 201:
+                self.__logger.warning(
+                    f'It was not possible to rename the attachment {attachment_filename}. See the response '
+                    f'for further details:\n{r}')
+                return []
             else:
                 r = r.json()
                 return [r[0]["filename"], r[0]["link"]]
-        except:
-            return None
+        except Exception as err:
+            self.__logger.warning("Unexpected exception: {0}".format(err))
+            return []
 
-    # Rename Attachment
-    def rename_attachment(self, pid: int, node_id: str, attachment_name: str, new_attachment_name: str):
-
-        url = self.__url + self.attachment_endpoint.replace("<ID>", str(node_id)) + "/" + attachment_name
+    def rename_attachment(self, pid: int, node_id: int, attachment_filename: str, new_attachment_filename: str) -> dict:
+        """
+        Renames a specific Attachment on a Node in your project.
+        """
+        url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_filename}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Content-type': 'application/json',
                   'Dradis-Project-Id': str(pid)}
 
-        data = {"attachment": {"filename": new_attachment_name}}
+        data = {"attachment": {"filename": new_attachment_filename}}
         r = self.contact_dradis(url, header, "PUT", "200", json.dumps(data))
 
         if r is None:
-            return None
+            self.__logger.warning(f'It was not possible to rename the attachment {attachment_filename}. See the response '
+                                  f'for further details:\n{r}')
+            return {}
 
-        return [r['filename'], r["link"]]
+        return r
 
-    # Delete Attachment
-    def delete_attachment(self, pid: int, node_id: str, attachment_name: str):
-
-        url = self.__url + self.attachment_endpoint.replace("<ID>", str(node_id)) + "/" + attachment_name
+    def delete_attachment(self, pid: int, node_id: int, attachment_name: str) -> bool:
+        """
+        Deletes an Attachment from the specified Node in your project.
+        """
+        url = f'{self.__url}{self.attachment_endpoint.format(id=node_id)}/{attachment_name}'
         header = {'Authorization': 'Token token="' + self.__apiToken + '"', 'Dradis-Project-Id': str(pid),
                   'Content-type': 'application/json'}
 
         r = self.contact_dradis(url, header, "DELETE", "200")
 
         if r is None:
-            return None
+            return False
 
         return True
