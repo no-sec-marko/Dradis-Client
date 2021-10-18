@@ -13,6 +13,8 @@ The original project was developed by Novacoast and updated by GoVanguard. In `D
 to the latest version of Dradis Pro API (currently v4.0).
 
 ## Installation
+
+### Local Installation
 Install pulling from this repo:
 
 ```bash
@@ -24,6 +26,12 @@ Local installation
 chmod +x packageIt.sh
 ./packageIt.sh
 python3 -m pip install ./dist/dradis-client-1.0.0.tar.gz
+```
+
+### Using pip
+
+```bash
+pip install dradis-client
 ```
 
 ## Usage
